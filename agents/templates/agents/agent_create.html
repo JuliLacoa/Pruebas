@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a href="{% url 'agents:agent-list' %}">Volver</a>
+    <hr />
+    <h1>Nuevo agente</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Crear</button>
+    </form>
+{% endblock content %}
