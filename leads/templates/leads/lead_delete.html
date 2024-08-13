@@ -1,12 +1,20 @@
 {% extends "base.html" %}
+{% load tailwind_filters %}
 
 {% block content %}
-    <a href="{% url 'leads:lead-list' %}">Volver</a>
-    <hr />
-    <h1>Seguro que querés eliminar este lead?</h1>
-    <form method="post">
+<div class="max-w-lg mx-auto">
+    <a class="hover:text-blue-500" href="{% url 'leads:lead-list' %}">
+        Volver
+    </a>
+    <h1 class="text-2xl text-gray-800 mt-3">
+        ¿Seguro que querés eliminar este lead?
+    </h1>
+    <form method="post" class="mt-5">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Eliminar</button>
+        {{ form|crispy }}
+        <button type="submit" class="w-flex text-yellow-300 bg-blue-500 hover:bg-yellow-300 hover:text-blue-500 px-3 py-2 rounded-md">
+            Eliminar
+        </button>
     </form>
+</div>
 {% endblock content %}

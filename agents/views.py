@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import reverse
@@ -22,9 +23,26 @@ class AgentCreateView(OrganisorAndLoginRequiredMixin, generic.CreateView):
         return reverse("agents:agent-list")
     
     def form_valid(self, form):
-        agent = form.save(commit=False)
-        agent.organization = self.request.user.userprofile
-        agent.save()
+        user = form.save(commit=False)
+        user.is_agent = True
+        user.is_organisor = False
+        user.set_password("123")
+        user.save()
+        Agent.objects.create(
+            user=user,
+            organization=self.request.user.userprofile,
+
+        )
+
+        send_mail(
+            subject="Fuiste invitado a ser agente.",
+            message="Fuiste agregado como agente en DJCRM. Logueate para empezar a trabajar!",
+            from_email="admin@trest.com",
+            recipient_list=[user.email]
+        )
+
+
+
         return super(AgentCreateView, self).form_valid(form)
     
     
