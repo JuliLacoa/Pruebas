@@ -1,5 +1,6 @@
 from typing import Any
 from django.core.mail import send_mail
+from django.db.models import Count
 from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -258,6 +259,8 @@ class CategoryListView(LoginRequiredMixin, generic.ListView):
                 organization=user.agent.organization
             )
 
+        # Anotar cada categoría con el conteo de leads asociados
+        queryset = queryset.annotate(lead_count=Count('leads'))
         return queryset
     
 
@@ -288,6 +291,61 @@ class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
             )
 
         return queryset
+    
+
+class CategoryCreateView(OrganisorAndLoginRequiredMixin, generic.CreateView):
+    template_name = "leads/category_create.html"
+    form_class = CategoryModelForm
+    
+    def get_success_url(self):
+        return reverse("leads:category-list")
+    
+    def form_valid(self, form):
+        category = form.save(commit=False)
+        category.organization = self.request.user.userprofile
+        category.save()
+        return super(CategoryCreateView, self).form_valid(form)
+    
+
+class CategoryUpdateView(OrganisorAndLoginRequiredMixin, generic.UpdateView):
+    template_name = "leads/category_update.html"
+    form_class = CategoryModelForm
+    
+    def get_success_url(self):
+        return reverse("leads:category-list")
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_organisor:
+            queryset = Category.objects.filter(
+                organization=user.userprofile
+            )
+        else:
+            queryset = Category.objects.filter(
+                organization=user.agent.organization
+            )
+
+        return queryset
+    
+
+class CategoryDeleteView(OrganisorAndLoginRequiredMixin, generic.DeleteView):
+    template_name = "leads/category_delete.html"
+
+    def get_success_url(self):
+        return reverse("leads:category-list")
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_organisor:
+            queryset = Category.objects.filter(
+                organization=user.userprofile
+            )
+        else:
+            queryset = Category.objects.filter(
+                organization=user.agent.organization
+            )
+
+        return queryset   
     
 
 class LeadCategoryUpdateView(LoginRequiredMixin, generic.UpdateView):

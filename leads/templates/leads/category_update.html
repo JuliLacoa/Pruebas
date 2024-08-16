@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+
+{% block content %}
+
+<div class="max-w-lg mx-auto">
+    <a class="hover:text-blue-500" href="{% url 'leads:category-list' %}">
+        Volver
+    </a>
+    <div class="mt-5">
+        <h1 class="text-4xl text-gray-800">
+            Actualizar {{ object.name }}
+        </h1>
+    </div>
+    <form method="post" class="mt-5">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type='submit' class="w-full text-yellow-300 bg-blue-500 hover:bg-yellow-300 hover:text-blue-500 px-3 py-2 rounded-md">
+            Actualizar
+        </button>
+    </form>
+</div>
+{% endblock content %}
+
+
+
+

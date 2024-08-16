@@ -25,7 +25,7 @@
                     <h2 class="text-gray-900 text-lg title-font font-medium mb-3">
                         {{ agent.user.username }}
                     </h2>
-                    <p class="leading-relaxed text-base">Acá puede ir una descripción relevante</p>
+                    <p class="leading-relaxed text-base">{{ agent.organization }}</p>
                     <a href="{% url 'agents:agent-detail' agent.pk %}" class="mt-3 text-indigo-500 inline-flex items-center">
                         Ver Agente
                         <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
