@@ -19,7 +19,7 @@ env = environ.Env(
 )
 
     #Ojo, el default debería estar en False, pero no estoy logrando setear el terminal para que lo tome como "1"
-READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=1)
+READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=0)
 if READ_DOT_ENV_FILE:
     # Take environment variables from .env file
     environ.Env.read_env()
